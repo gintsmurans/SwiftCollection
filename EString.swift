@@ -56,7 +56,6 @@ extension String {
         if to < 0 || to < from || to > stringLength {
             return nil
         }
-        println("From: \(from); To: \(to); Length: \(stringLength)")
 
         // Get the new string
         var new_string = self.substringWithRange(Range<String.Index>(start: advance(self.startIndex, from), end: advance(self.startIndex, to)))
