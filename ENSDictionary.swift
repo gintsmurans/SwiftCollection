@@ -1,6 +1,5 @@
 //
 //  EDictionary.swift
-//  donster.me
 //
 //  Created by Gints Murans on 03/11/14.
 //  Copyright (c) 2014 Gints Murans. All rights reserved.
