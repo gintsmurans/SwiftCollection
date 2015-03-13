@@ -7,6 +7,7 @@
 
 import Foundation
 import AssetsLibrary
+import UIKit
 
 extension ALAssetsLibrary {
 

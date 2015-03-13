@@ -7,6 +7,7 @@
 
 import Foundation
 import AVFoundation
+import UIKit
 
 extension AVAsset {
     /// Class method that returns instance of UIImage containing first frame of video asset loaded from the url specified by "url" parameter
