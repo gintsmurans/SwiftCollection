@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension NSBundle {
+public extension NSBundle {
     func pathForResource(filename: String) -> String? {
         if self.resourcePath == nil {
             return nil

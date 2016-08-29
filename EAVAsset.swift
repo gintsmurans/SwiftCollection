@@ -9,7 +9,7 @@ import Foundation
 import AVFoundation
 import UIKit
 
-extension AVAsset {
+public extension AVAsset {
     /// Class method that returns instance of UIImage containing first frame of video asset loaded from the url specified by "url" parameter
     class func firstVideoFrameFromURL(url: NSURL!) -> UIImage? {
         let asset = AVAsset(URL: url)

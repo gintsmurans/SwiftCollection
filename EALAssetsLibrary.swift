@@ -9,8 +9,7 @@ import Foundation
 import AssetsLibrary
 import UIKit
 
-extension ALAssetsLibrary {
-
+public extension ALAssetsLibrary {
     func saveImage(image: UIImage!, toAlbum: String? = nil, withCallback callback: ((error: NSError?) -> Void)?) {
         self.writeImageToSavedPhotosAlbum(image.CGImage, orientation: ALAssetOrientation(rawValue: image.imageOrientation.rawValue)!) { (u, e) -> Void in
             if e != nil {
@@ -88,5 +87,4 @@ extension ALAssetsLibrary {
             }
         }, failureBlock: callback)
     }
-
 }

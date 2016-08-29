@@ -24,7 +24,8 @@ public enum UIImageContentMode {
     case ScaleAspectFitForceSize
 }
 
-extension UIImage {
+
+public extension UIImage {
     /// Initializes a image object using the specified color as background color and size as a size for the image
     convenience init?(color: UIColor, size: CGSize) {
             let rect = CGRectMake(0, 0, size.width, size.height)

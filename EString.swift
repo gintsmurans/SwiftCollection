@@ -7,8 +7,7 @@
 
 import Foundation
 
-extension String {
-
+public extension String {
     var length: Int {
         get {
             return self.characters.count

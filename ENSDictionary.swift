@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension NSDictionary {
+public extension NSDictionary {
     // Returns json string constructed from this dictionary or nil in case of an error
     func jsonString(pretty: Bool = false) -> (String?, String?) {
         if NSJSONSerialization.isValidJSONObject(self) == false {

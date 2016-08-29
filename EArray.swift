@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Array {
+public extension Array {
     mutating func removeObject<U: Equatable>(object: U) -> Int? {
         var index: Int?
         for (idx, objectToCompare) in self.enumerate() {
