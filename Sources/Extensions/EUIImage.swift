@@ -49,6 +49,7 @@ public extension UIImage {
                        scale: 0.0, orientation: self.imageOrientation)
     }
 
+    /// Crop image to squared size by searching the shortest first
     func cropToSquare() -> UIImage? {
         let size = CGSizeMake(self.size.width * self.scale, self.size.height * self.scale)
         let shortest = min(size.width, size.height)

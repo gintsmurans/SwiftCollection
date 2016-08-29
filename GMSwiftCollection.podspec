@@ -1,5 +1,5 @@
 #
-#  Be sure to run `pod spec lint SwiftExtensions.podspec' to ensure this is a
+#  Be sure to run `pod spec lint GMSwiftCollection.podspec' to ensure this is a
 #  valid spec and to remove all comments including this before submitting the spec.
 #
 #  To learn more about Podspec attributes see http://docs.cocoapods.org/specification.html
@@ -8,14 +8,14 @@
 
 Pod::Spec.new do |s|
 
-  s.name         = "GMSwiftExtensions"
+  s.name         = "GMSwiftCollection"
   s.version      = "0.0.7"
-  s.summary      = "Various Swift Extensions"
+  s.summary      = "Collection of various Swift sources"
   s.description  = <<-DESC
-Various Swift Extensions, that I have put together my self and from samples found while googling away, doing all kinds of stuff like: UIImage().resize(), UIImage().crop(), NSDictionary().jsonString(), UIView().viewWithTagRecursive(), and more.
+Collection of various Swift sources: Controllers, Classes, Extensions, and more, that I have put together my self and from samples found while googling around.
                    DESC
 
-  s.homepage     = "https://github.com/gintsmurans/SwiftExtensions"
+  s.homepage     = "https://github.com/gintsmurans/SwiftCollection"
   s.license      = "MIT"
 
   s.author       = { "Gints Murāns" => "gm@gm.lv" }
@@ -24,7 +24,7 @@ Various Swift Extensions, that I have put together my self and from samples foun
   s.platform     = :ios, "8.0"
   s.requires_arc = true
 
-  s.source       = { :git => "https://github.com/gintsmurans/SwiftExtensions.git", :branch => "master" }
+  s.source       = { :git => "https://github.com/gintsmurans/SwiftCollection.git", :branch => "master" }
   s.source_files  = "*.swift"
   s.exclude_files = "README.md", "LICENSE"
 
