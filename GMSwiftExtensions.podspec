@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
 
-  s.name         = "SwiftExtensions"
+  s.name         = "GMSwiftExtensions"
   s.version      = "0.0.4"
   s.summary      = "Various Swift Extensions"
   s.description  = <<-DESC
