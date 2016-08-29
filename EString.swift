@@ -11,7 +11,7 @@ extension String {
 
     var length: Int {
         get {
-            return countElements(self)
+            return self.characters.count
         }
     }
 
@@ -23,7 +23,7 @@ extension String {
 
     func substr(start: Int? = nil, length: Int? = nil) -> String? {
 
-        let stringLength = countElements(self)
+        let stringLength = self.length
         var from = 0
         var to = 0
 
@@ -57,13 +57,15 @@ extension String {
         }
 
         // Get the new string
-        var new_string = self.substringWithRange(Range<String.Index>(start: advance(self.startIndex, from), end: advance(self.startIndex, to)))
+        let range = self.startIndex.advancedBy(from)...self.startIndex.advancedBy(to)
+        let new_string = self.substringWithRange(range)
+
         return new_string
     }
 
     func isValidEmail(strict: Bool = true) -> Bool {
         // Minimum required characters: a@a.a
-        if countElements(self) < 5 {
+        if self.length < 5 {
             return false
         }
 
@@ -71,6 +73,7 @@ extension String {
         let laxString = ".+@([A-Za-z0-9]+\\.)+[A-Za-z]{2}[A-Za-z]*"
         let emailRegex = strict ? stricterFilterString : laxString
         let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegex)
-        return emailTest!.evaluateWithObject(self)
+
+        return emailTest.evaluateWithObject(self)
     }
 }

@@ -13,7 +13,7 @@ extension NSBundle {
             return nil
         }
 
-        var path_to_file = "\(self.resourcePath!)/\(filename)"
+        let path_to_file = "\(self.resourcePath!)/\(filename)"
         if NSFileManager.defaultManager().fileExistsAtPath(path_to_file) {
             return path_to_file
         }

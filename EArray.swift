@@ -10,7 +10,7 @@ import Foundation
 extension Array {
     mutating func removeObject<U: Equatable>(object: U) -> Int? {
         var index: Int?
-        for (idx, objectToCompare) in enumerate(self) {
+        for (idx, objectToCompare) in self.enumerate() {
             if let to = objectToCompare as? U {
                 if object == to {
                     index = idx
@@ -21,6 +21,7 @@ extension Array {
         if index != nil {
             self.removeAtIndex(index!)
         }
+
         return index
     }
 }

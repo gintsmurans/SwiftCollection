@@ -50,7 +50,7 @@ extension ALAssetsLibrary {
         self.enumerateGroupsWithTypes(ALAssetsGroupAlbum, usingBlock: { (group, stop) -> Void in
 
             // Compare the names of the albums
-            if group != nil && toAlbum == group.valueForProperty(ALAssetsGroupPropertyName) as String {
+            if group != nil && toAlbum == group.valueForProperty(ALAssetsGroupPropertyName) as! String {
                 albumWasFound = true
 
                 // Get the asset and add to the album
