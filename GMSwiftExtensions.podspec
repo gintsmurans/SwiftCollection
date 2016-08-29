@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "GMSwiftExtensions"
-  s.version      = "0.0.5"
+  s.version      = "0.0.6"
   s.summary      = "Various Swift Extensions"
   s.description  = <<-DESC
 Various Swift Extensions, that I have put together my self and from samples found while googling away, doing all kinds of stuff like: UIImage().resize(), UIImage().crop(), NSDictionary().jsonString(), UIView().viewWithTagRecursive(), and more.

@@ -1,8 +1,8 @@
 //
 //  EUIImage.swift
 //
-//  Created by Gints Murans on 13/03/15.
-//  Copyright (c) 2015 Gints Murans. All rights reserved.
+//  Created by Gints Murans on 13.03.15.
+//  Copyright © 2015 Gints Murans. All rights reserved.
 //
 
 import UIKit

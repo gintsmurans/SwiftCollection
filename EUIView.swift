@@ -1,9 +1,8 @@
 //
 //  EUIView.swift
-//  DDZ Dienas Atskaite
 //
 //  Created by Gints Murans on 29.08.16.
-//  Copyright © 2016. g. 4Apps. All rights reserved.
+//  Copyright © 2016 Gints Murans. All rights reserved.
 //
 
 import UIKit
