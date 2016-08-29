@@ -5,11 +5,10 @@
 //  Copyright © 2016 Gints Murans. All rights reserved.
 //
 
-
 import UIKit
 
 /**
- CUIButton - Custom UIButton allowing to set background colors depending on the state of the button. 
+ CUIButton - Custom UIButton allowing to set background colors depending on the state of the button.
  Colors can be set via interface builder.
  */
 @IBDesignable
