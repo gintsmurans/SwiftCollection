@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UINavigationController {
+public extension UINavigationController {
     func popViewControllerAnimatedWithHandler(handler: ()->()) {
         CATransaction.begin()
         CATransaction.setCompletionBlock(handler)
