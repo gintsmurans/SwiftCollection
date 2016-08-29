@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "GMSwiftCollection"
-  s.version      = "0.0.7"
+  s.version      = "0.0.9"
   s.summary      = "Collection of various Swift sources"
   s.description  = <<-DESC
 Collection of various Swift sources: Controllers, Classes, Extensions, and more, that I have put together my self and from samples found while googling around.
@@ -25,7 +25,7 @@ Collection of various Swift sources: Controllers, Classes, Extensions, and more,
   s.requires_arc = true
 
   s.source       = { :git => "https://github.com/gintsmurans/SwiftCollection.git", :branch => "master" }
-  s.source_files  = "*.swift"
+  s.source_files  = "Sources/**/*.swift"
   s.exclude_files = "README.md", "LICENSE"
 
 end
