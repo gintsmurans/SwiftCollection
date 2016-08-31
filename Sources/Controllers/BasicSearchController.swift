@@ -29,7 +29,7 @@ public enum BasicSearchControllerError : ErrorType {
     }
 }
 
-public typealias BasicSearchControllerCallback = (selectedItem: Dictionary<String, AnyObject!>?)->()
+public typealias BasicSearchControllerCallback = (selectedItem: Dictionary<String, AnyObject>?)->()
 
 
 /**
@@ -53,8 +53,8 @@ public class BasicSearchController: UITableViewController, UISearchResultsUpdati
     public var userInfo: NSMutableDictionary! = NSMutableDictionary()
     public var tableReuseIdentificator = "BasicSearchControllerCell"
 
-    public var data: [Dictionary<String, AnyObject!>]?
-    public var filteredData: [Dictionary<String, AnyObject!>]?
+    public var data: [Dictionary<String, AnyObject>]?
+    public var filteredData: [Dictionary<String, AnyObject>]?
     public var groups: [String]? = nil {
         didSet {
             if (groups != nil) {
@@ -110,16 +110,16 @@ public class BasicSearchController: UITableViewController, UISearchResultsUpdati
         try! self.loadData(true)
     }
 
-    public func displayText(item: Dictionary<String, AnyObject!>) -> String? {
+    public func displayText(item: Dictionary<String, AnyObject>, cell: UITableViewCell? = nil) -> String? {
         return item["name"] as? String
     }
 
-    public func displayDetailsText(item: Dictionary<String, AnyObject!>) -> String? {
+    public func displayDetailsText(item: Dictionary<String, AnyObject>, cell: UITableViewCell? = nil) -> String? {
         return item["name"] as? String
     }
 
-    public func filterData(searchText: String, scope: String?) -> (Dictionary<String, AnyObject!>) -> (Bool) {
-        return {(item : Dictionary<String, AnyObject!>) -> Bool in
+    public func filterData(searchText: String, scope: String?) -> (Dictionary<String, AnyObject>) -> (Bool) {
+        return {(item : Dictionary<String, AnyObject>) -> Bool in
             return (item["name"] as! String).lowercaseString.containsString(searchText.lowercaseString)
         }
     }
@@ -140,15 +140,15 @@ public class BasicSearchController: UITableViewController, UISearchResultsUpdati
     override public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(tableReuseIdentificator, forIndexPath: indexPath)
 
-        let item: Dictionary<String, AnyObject!>
+        let item: Dictionary<String, AnyObject>
         if searchController.searchBar.text != "" {
             item = filteredData![indexPath.row]
         } else {
             item = data![indexPath.row]
         }
 
-        cell.textLabel!.text = self.displayText(item)
-        cell.detailTextLabel?.text = self.displayDetailsText(item)
+        cell.textLabel!.text = self.displayText(item, cell: cell)
+        cell.detailTextLabel?.text = self.displayDetailsText(item, cell: cell)
 
         return cell
     }
