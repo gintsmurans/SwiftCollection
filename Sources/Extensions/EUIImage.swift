@@ -18,10 +18,10 @@ public enum UIImageContentMode {
     case ScaleAspectFit
 
     /// The option to scale the image to fill the size maintaining the aspect ratio, but forcing new image size to filled image size.
-    case ScaleAspectFillForceSize
+    case ScaleAspectWidth
 
     /// The option to scale the image to fit the size by maintaining the aspect ratio, but forcing new image size to be equal to fitted image size.
-    case ScaleAspectFitForceSize
+    case ScaleAspectHeight
 }
 
 
@@ -88,16 +88,13 @@ public extension UIImage {
                 rect.size.width = round(self.size.width * ratio)
             }
             break
+        case .ScaleAspectWidth:
+//            rect.size.height = round(self.size.height * ratio)
+            break;
+        case .ScaleAspectHeight:
+            break;
         default:
-            break
-        }
-
-        switch contentMode {
-        case .ScaleAspectFillForceSize, .ScaleAspectFitForceSize:
-            newSize = rect.size
-            break
-        default:
-            break
+            break;
         }
 
         // Fix for a colorspace / transparency issue that affects some types of
@@ -105,7 +102,7 @@ public extension UIImage {
 
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedLast.rawValue)
-        let context = CGBitmapContextCreate(nil, Int(newSize.width), Int(newSize.height), 8, 0, colorSpace, bitmapInfo.rawValue)
+        let context = CGBitmapContextCreate(nil, Int(rect.size.width), Int(rect.size.height), 8, 0, colorSpace, bitmapInfo.rawValue)
 
         let transform = CGAffineTransformIdentity
 

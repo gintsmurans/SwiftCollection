@@ -15,4 +15,11 @@ public extension NSDate {
             return NSCalendar.currentCalendar().components(unitFlags, fromDate: self)
         }
     }
+
+    func format(format: String) -> String {
+        var formatter = NSDateFormatter()
+        formatter.dateFormat = format
+
+        return formatter.stringFromDate(self)
+    }
 }
