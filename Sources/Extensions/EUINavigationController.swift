@@ -8,10 +8,10 @@
 import UIKit
 
 public extension UINavigationController {
-    func popViewControllerAnimatedWithHandler(handler: ()->()) {
+    func popViewControllerAnimatedWithHandler(_ handler: @escaping ()->()) {
         CATransaction.begin()
         CATransaction.setCompletionBlock(handler)
-        self.popViewControllerAnimated(true)
+        self.popViewController(animated: true)
         CATransaction.commit()
     }
 }

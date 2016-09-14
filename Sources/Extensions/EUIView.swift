@@ -9,7 +9,7 @@ import UIKit
 
 public extension UIView {
     
-    func viewWithTagRecursive(tag: Int) -> UIView? {
+    func viewWithTagRecursive(_ tag: Int) -> UIView? {
         if let view = self.viewWithTag(tag) {
             return view
         }

@@ -8,18 +8,18 @@
 
 import Foundation
 
-public extension NSDate {
-    var dateComponents: NSDateComponents {
+public extension Date {
+    var dateComponents: DateComponents {
         get {
-            let unitFlags: NSCalendarUnit = [.Hour, .Minute, .Second, .Day, .Month, .Year]
-            return NSCalendar.currentCalendar().components(unitFlags, fromDate: self)
+            let unitFlags: NSCalendar.Unit = [.hour, .minute, .second, .day, .month, .year]
+            return (Calendar.current as NSCalendar).components(unitFlags, from: self)
         }
     }
 
-    func format(format: String) -> String {
-        var formatter = NSDateFormatter()
+    func format(_ format: String) -> String {
+        let formatter = DateFormatter()
         formatter.dateFormat = format
 
-        return formatter.stringFromDate(self)
+        return formatter.string(from: self)
     }
 }

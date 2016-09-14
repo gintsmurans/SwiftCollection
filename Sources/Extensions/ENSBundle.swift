@@ -7,14 +7,14 @@
 
 import Foundation
 
-public extension NSBundle {
-    func pathForResource(filename: String) -> String? {
+public extension Bundle {
+    func pathForResource(_ filename: String) -> String? {
         if self.resourcePath == nil {
             return nil
         }
 
         let path_to_file = "\(self.resourcePath!)/\(filename)"
-        if NSFileManager.defaultManager().fileExistsAtPath(path_to_file) {
+        if FileManager.default.fileExists(atPath: path_to_file) {
             return path_to_file
         }
 

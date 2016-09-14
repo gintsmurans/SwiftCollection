@@ -11,8 +11,8 @@ import UIKit
 
 public extension AVAsset {
     /// Class method that returns instance of UIImage containing first frame of video asset loaded from the url specified by "url" parameter
-    class func firstVideoFrameFromURL(url: NSURL!) -> UIImage? {
-        let asset = AVAsset(URL: url)
+    class func firstVideoFrameFromURL(_ url: URL!) -> UIImage? {
+        let asset = AVAsset(url: url)
         return asset.firstVideoFrame()
     }
 
@@ -35,12 +35,12 @@ public extension AVAsset {
 
         var frameRef: CGImage?
         do {
-            frameRef = try assetImageGemerator.copyCGImageAtTime(time, actualTime: nil)
+            frameRef = try assetImageGemerator.copyCGImage(at: time, actualTime: nil)
         }
         catch ( _) {
             return nil
         }
 
-        return UIImage(CGImage: frameRef!)
+        return UIImage(cgImage: frameRef!)
     }
 }

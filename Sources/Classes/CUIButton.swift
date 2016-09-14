@@ -12,9 +12,9 @@ import UIKit
  Colors can be set via interface builder.
  */
 @IBDesignable
-public class CUIButton: UIButton {
+open class CUIButton: UIButton {
 
-    private var originalBackgroundColor: UIColor?
+    fileprivate var originalBackgroundColor: UIColor?
 
 
     override public init(frame: CGRect) {
@@ -32,17 +32,17 @@ public class CUIButton: UIButton {
 
     // MARK: - Highlighted
 
-    @IBInspectable public var highlightedBackgroundColor: UIColor = UIColor.clearColor() {
+    @IBInspectable open var highlightedBackgroundColor: UIColor = UIColor.clear {
         didSet {
-            if self.highlighted {
+            if self.isHighlighted {
                 self.backgroundColor = highlightedBackgroundColor
             }
         }
     }
 
-    public override var highlighted: Bool {
+    open override var isHighlighted: Bool {
         didSet {
-            if self.highlighted {
+            if self.isHighlighted {
                 self.backgroundColor = self.highlightedBackgroundColor
             } else {
                 self.backgroundColor = self.originalBackgroundColor
@@ -53,17 +53,17 @@ public class CUIButton: UIButton {
 
     // MARK: - Selected
 
-    @IBInspectable public var selectedBackgroundColor: UIColor = UIColor.clearColor() {
+    @IBInspectable open var selectedBackgroundColor: UIColor = UIColor.clear {
         didSet {
-            if self.selected {
+            if self.isSelected {
                 self.backgroundColor = selectedBackgroundColor
             }
         }
     }
 
-    public override var selected: Bool {
+    open override var isSelected: Bool {
         didSet {
-            if self.selected {
+            if self.isSelected {
                 if self.originalBackgroundColor == nil {
                     self.originalBackgroundColor = self.backgroundColor
                 }
@@ -77,17 +77,17 @@ public class CUIButton: UIButton {
 
     // MARK: - Disabled
 
-    @IBInspectable public var disabledBackgroundColor: UIColor = UIColor.clearColor() {
+    @IBInspectable open var disabledBackgroundColor: UIColor = UIColor.clear {
         didSet {
-            if self.enabled == false {
+            if self.isEnabled == false {
                 self.backgroundColor = disabledBackgroundColor
             }
         }
     }
 
-    public override var enabled: Bool {
+    open override var isEnabled: Bool {
         didSet {
-            if self.enabled == false {
+            if self.isEnabled == false {
                 if self.originalBackgroundColor == nil {
                     self.originalBackgroundColor = self.backgroundColor
                 }

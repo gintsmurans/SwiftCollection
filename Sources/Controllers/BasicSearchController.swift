@@ -8,28 +8,28 @@
 import UIKit
 
 
-public enum BasicSearchControllerError : ErrorType {
-    case LoadDataNotImplemented
-    case AdditionalUserInfoDataRequired
-    case GeneralError(message: String)
+public enum BasicSearchControllerError : Error {
+    case loadDataNotImplemented
+    case additionalUserInfoDataRequired
+    case generalError(message: String)
 
     var description: String {
         get {
             switch self {
-            case .LoadDataNotImplemented:
+            case .loadDataNotImplemented:
                 return "Method loadData is not yet overridden"
 
-            case .AdditionalUserInfoDataRequired:
+            case .additionalUserInfoDataRequired:
                 return "Some additional data set in userInfo is required"
 
-            case .GeneralError(let message):
+            case .generalError(let message):
                 return "Error: \(message)"
             }
         }
     }
 }
 
-public typealias BasicSearchControllerCallback = (selectedItem: Dictionary<String, AnyObject>?)->()
+public typealias BasicSearchControllerCallback = (_ selectedItem: Dictionary<String, Any>?)->()
 
 
 /**
@@ -46,33 +46,33 @@ public typealias BasicSearchControllerCallback = (selectedItem: Dictionary<Strin
          )
      }
  */
-public class BasicSearchController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate {
+open class BasicSearchController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate {
 
     let searchController = UISearchController(searchResultsController: nil)
 
-    public var userInfo: NSMutableDictionary! = NSMutableDictionary()
-    public var tableReuseIdentificator = "BasicSearchControllerCell"
+    open var userInfo: NSMutableDictionary! = NSMutableDictionary()
+    open var tableReuseIdentificator = "BasicSearchControllerCell"
 
-    public var data: [Dictionary<String, AnyObject>]?
-    public var filteredData: [Dictionary<String, AnyObject>]?
-    public var groups: [String]? = nil {
+    open var data: [Dictionary<String, Any>]?
+    open var filteredData: [Dictionary<String, Any>]?
+    open var groups: [String]? = nil {
         didSet {
             if (groups != nil) {
-                groups!.insert("ALL", atIndex: 0)
+                groups!.insert("ALL", at: 0)
                 searchController.searchBar.scopeButtonTitles = groups
                 searchController.searchBar.sizeToFit()
             }
         }
     }
-    public var selectedItem: Dictionary<String, AnyObject>?
-    public var selectItemCallback: BasicSearchControllerCallback?
+    open var selectedItem: Dictionary<String, Any>?
+    open var selectItemCallback: BasicSearchControllerCallback?
 
 
     // MARK: - View Lifecycle
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationController?.navigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
         self.definesPresentationContext = true
 
         // Setup the Search Controller
@@ -87,7 +87,7 @@ public class BasicSearchController: UITableViewController, UISearchResultsUpdati
 
         // Refresh control
         self.refreshControl = UIRefreshControl()
-        self.refreshControl?.addTarget(self, action: #selector(self.refreshData(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl?.addTarget(self, action: #selector(self.refreshData(_:)), for: UIControlEvents.valueChanged)
 
         // Load data
         try! self.loadData()
@@ -102,49 +102,49 @@ public class BasicSearchController: UITableViewController, UISearchResultsUpdati
 
 
     // MARK: - Helpers
-    public func loadData(ignoreCache: Bool = false) throws {
-        throw BasicSearchControllerError.LoadDataNotImplemented
+    open func loadData(_ ignoreCache: Bool = false) throws {
+        throw BasicSearchControllerError.loadDataNotImplemented
     }
 
-    @IBAction public func refreshData(sender: AnyObject?) {
+    @IBAction open func refreshData(_ sender: AnyObject?) {
         try! self.loadData(true)
     }
 
-    public func displayText(item: Dictionary<String, AnyObject>, cell: UITableViewCell? = nil) -> String? {
+    open func displayText(_ item: Dictionary<String, Any>, cell: UITableViewCell? = nil) -> String? {
         return item["name"] as? String
     }
 
-    public func displayDetailsText(item: Dictionary<String, AnyObject>, cell: UITableViewCell? = nil) -> String? {
+    open func displayDetailsText(_ item: Dictionary<String, Any>, cell: UITableViewCell? = nil) -> String? {
         return item["name"] as? String
     }
 
-    public func filterData(searchText: String, scope: String?) -> (Dictionary<String, AnyObject>) -> (Bool) {
-        return {(item : Dictionary<String, AnyObject>) -> Bool in
-            return (item["name"] as! String).lowercaseString.containsString(searchText.lowercaseString)
+    open func filterData(_ searchText: String, scope: String?) -> (Dictionary<String, Any>) -> (Bool) {
+        return {(item : Dictionary<String, Any>) -> Bool in
+            return (item["name"] as! String).lowercased().contains(searchText.lowercased())
         }
     }
 
 
     // MARK: - Table View
-    override public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override open func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchController.searchBar.text != "" {
             return filteredData!.count
         }
         return data == nil ? 0 : data!.count
     }
 
-    override public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(tableReuseIdentificator, forIndexPath: indexPath)
+    override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentificator, for: indexPath)
 
-        let item: Dictionary<String, AnyObject>
+        let item: Dictionary<String, Any>
         if searchController.searchBar.text != "" {
-            item = filteredData![indexPath.row]
+            item = filteredData![(indexPath as NSIndexPath).row]
         } else {
-            item = data![indexPath.row]
+            item = data![(indexPath as NSIndexPath).row]
         }
 
         cell.textLabel!.text = self.displayText(item, cell: cell)
@@ -153,33 +153,33 @@ public class BasicSearchController: UITableViewController, UISearchResultsUpdati
         return cell
     }
 
-    override public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if searchController.searchBar.text != "" {
-            selectedItem = filteredData![indexPath.row]
+            selectedItem = filteredData![(indexPath as NSIndexPath).row]
         } else {
-            selectedItem = data![indexPath.row]
+            selectedItem = data![(indexPath as NSIndexPath).row]
         }
 
         if let callback = self.selectItemCallback {
-            callback(selectedItem: self.selectedItem)
+            callback(self.selectedItem)
         }
     }
 
     // MARK: - Filter
-    public func filterContentForSearchText(searchText: String, scope: String?) {
+    open func filterContentForSearchText(_ searchText: String, scope: String?) {
         filteredData = data!.filter(self.filterData(searchText, scope: scope))
         tableView.reloadData()
     }
 
 
     // MARK: - UISearchBar Delegate
-    public func searchBar(searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+    open func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
          filterContentForSearchText(searchBar.text!, scope: searchBar.scopeButtonTitles![selectedScope])
     }
 
 
     // MARK: - UISearchResultsUpdating Delegate
-    public func updateSearchResultsForSearchController(searchController: UISearchController) {
+    open func updateSearchResults(for searchController: UISearchController) {
         let searchBar = searchController.searchBar
         var scope: String?
         if let scopes = searchBar.scopeButtonTitles {

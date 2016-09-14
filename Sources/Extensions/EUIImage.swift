@@ -9,26 +9,26 @@ import UIKit
 
 public enum UIImageContentMode {
     /// The option to scale the image to fit the new size by changing the aspect ratio of the content if necessary.
-    case ScaleToFill
+    case scaleToFill
 
     /// The option to scale the image to fill the size by maintaining the aspect ratio. Some portion of the content may be clipped to fill the image's new size.
-    case ScaleAspectFill
+    case scaleAspectFill
 
     /// The option to scale the image to fit the size by maintaining the aspect ratio. Any remaining area of the image's bounds is transparent or white in case of formats that does not support transparency.
-    case ScaleAspectFit
+    case scaleAspectFit
 
     /// The option to scale the image to fill the size maintaining the aspect ratio, but forcing new image size to filled image size.
-    case ScaleAspectWidth
+    case scaleAspectWidth
 
     /// The option to scale the image to fit the size by maintaining the aspect ratio, but forcing new image size to be equal to fitted image size.
-    case ScaleAspectHeight
+    case scaleAspectHeight
 }
 
 
 public extension UIImage {
     /// Initializes a image object using the specified color as background color and size as a size for the image
     convenience init?(color: UIColor, size: CGSize) {
-            let rect = CGRectMake(0, 0, size.width, size.height)
+            let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
             UIGraphicsBeginImageContextWithOptions(size, false, 0)
             color.setFill()
             UIRectFill(rect)
@@ -36,27 +36,27 @@ public extension UIImage {
             let image = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
 
-            self.init(CGImage: image.CGImage!)
+            self.init(cgImage: (image?.cgImage!)!)
     }
 
 
     // MARK: Crop
 
     /// Crop image. Returns new one.
-    func crop(bounds: CGRect) -> UIImage?
+    func crop(_ bounds: CGRect) -> UIImage?
     {
-        return UIImage(CGImage: CGImageCreateWithImageInRect(self.CGImage, bounds)!,
+        return UIImage(cgImage: (self.cgImage?.cropping(to: bounds)!)!,
                        scale: 0.0, orientation: self.imageOrientation)
     }
 
     /// Crop image to squared size by searching the shortest first
     func cropToSquare() -> UIImage? {
-        let size = CGSizeMake(self.size.width * self.scale, self.size.height * self.scale)
+        let size = CGSize(width: self.size.width * self.scale, height: self.size.height * self.scale)
         let shortest = min(size.width, size.height)
         let left: CGFloat = size.width > shortest ? (size.width-shortest)/2 : 0
         let top: CGFloat = size.height > shortest ? (size.height-shortest)/2 : 0
         let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        let insetRect = CGRectInset(rect, left, top)
+        let insetRect = rect.insetBy(dx: left, dy: top)
         return crop(insetRect)
     }
 
@@ -64,15 +64,15 @@ public extension UIImage {
     // MARK: Resize
 
     /// Resize image. Returns new one.
-    func resize(size: CGSize, contentMode: UIImageContentMode = .ScaleToFill) -> UIImage?
+    func resize(_ size: CGSize, contentMode: UIImageContentMode = .scaleToFill) -> UIImage?
     {
-        var newSize = size
+        let newSize = size
         let horizontalRatio = newSize.width / self.size.width;
         let verticalRatio = newSize.height / self.size.height;
         var rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
 
         switch contentMode {
-        case .ScaleAspectFill:
+        case .scaleAspectFill:
             let ratio = max(horizontalRatio, verticalRatio)
             if self.size.width / self.size.height >= newSize.width / newSize.height {
                 rect.size.width = round(self.size.width * ratio)
@@ -80,7 +80,7 @@ public extension UIImage {
                 rect.size.height = round(self.size.height * ratio)
             }
             break
-        case .ScaleAspectFit:
+        case .scaleAspectFit:
             let ratio = min(horizontalRatio, verticalRatio)
             if self.size.width / self.size.height >= newSize.width / newSize.height {
                 rect.size.height = round(self.size.height * ratio)
@@ -88,10 +88,10 @@ public extension UIImage {
                 rect.size.width = round(self.size.width * ratio)
             }
             break
-        case .ScaleAspectWidth:
+        case .scaleAspectWidth:
 //            rect.size.height = round(self.size.height * ratio)
             break;
-        case .ScaleAspectHeight:
+        case .scaleAspectHeight:
             break;
         default:
             break;
@@ -101,24 +101,24 @@ public extension UIImage {
         // images. See here: http://vocaro.com/trevor/blog/2009/10/12/resize-a-uiimage-the-right-way/comment-page-2/#comment-39951
 
         let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedLast.rawValue)
-        let context = CGBitmapContextCreate(nil, Int(rect.size.width), Int(rect.size.height), 8, 0, colorSpace, bitmapInfo.rawValue)
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+        let context = CGContext(data: nil, width: Int(rect.size.width), height: Int(rect.size.height), bitsPerComponent: 8, bytesPerRow: 0, space: colorSpace, bitmapInfo: bitmapInfo.rawValue)
 
-        let transform = CGAffineTransformIdentity
+        let transform = CGAffineTransform.identity
 
         // Rotate and/or flip the image if required by its orientation
-        CGContextConcatCTM(context, transform);
+        context?.concatenate(transform);
 
         // Set the quality level to use when rescaling
-        CGContextSetInterpolationQuality(context, CGInterpolationQuality(rawValue: 3)!)
+        context!.interpolationQuality = CGInterpolationQuality(rawValue: 3)!
 
         //CGContextSetInterpolationQuality(context, CGInterpolationQuality(kCGInterpolationHigh.value))
 
         // Draw into the context; this scales the image
-        CGContextDrawImage(context, rect, self.CGImage)
+        context?.draw(self.cgImage!, in: rect)
 
         // Get the resized image from the context and a UIImage
-        let newImage = UIImage(CGImage: CGBitmapContextCreateImage(context)!, scale: self.scale, orientation: self.imageOrientation)
+        let newImage = UIImage(cgImage: (context?.makeImage()!)!, scale: self.scale, orientation: self.imageOrientation)
         return newImage;
     }
 
@@ -127,58 +127,58 @@ public extension UIImage {
 
     func fixImageOrientation() -> UIImage? {
 
-        if self.imageOrientation == UIImageOrientation.Up {
+        if self.imageOrientation == UIImageOrientation.up {
             return self
         }
 
-        var transform = CGAffineTransformIdentity
+        var transform = CGAffineTransform.identity
 
         switch self.imageOrientation {
-        case UIImageOrientation.Down, UIImageOrientation.DownMirrored:
-            transform = CGAffineTransformTranslate(transform, self.size.width, self.size.height)
-            transform = CGAffineTransformRotate(transform, CGFloat(M_PI))
+        case UIImageOrientation.down, UIImageOrientation.downMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: self.size.height)
+            transform = transform.rotated(by: CGFloat(M_PI))
             break
-        case UIImageOrientation.Left, UIImageOrientation.LeftMirrored:
-            transform = CGAffineTransformTranslate(transform, self.size.width, 0)
-            transform = CGAffineTransformRotate(transform, CGFloat(M_PI_2))
+        case UIImageOrientation.left, UIImageOrientation.leftMirrored:
+            transform = transform.translatedBy(x: self.size.width, y: 0)
+            transform = transform.rotated(by: CGFloat(M_PI_2))
             break
-        case UIImageOrientation.Right, UIImageOrientation.RightMirrored:
-            transform = CGAffineTransformTranslate(transform, 0, self.size.height)
-            transform = CGAffineTransformRotate(transform, CGFloat(-M_PI_2))
+        case UIImageOrientation.right, UIImageOrientation.rightMirrored:
+            transform = transform.translatedBy(x: 0, y: self.size.height)
+            transform = transform.rotated(by: CGFloat(-M_PI_2))
             break
-        case UIImageOrientation.Up, UIImageOrientation.UpMirrored:
+        case UIImageOrientation.up, UIImageOrientation.upMirrored:
             break
         }
 
         switch self.imageOrientation {
-        case UIImageOrientation.UpMirrored, UIImageOrientation.DownMirrored:
-            CGAffineTransformTranslate(transform, self.size.width, 0)
-            CGAffineTransformScale(transform, -1, 1)
+        case UIImageOrientation.upMirrored, UIImageOrientation.downMirrored:
+            transform.translatedBy(x: self.size.width, y: 0)
+            transform.scaledBy(x: -1, y: 1)
             break
-        case UIImageOrientation.LeftMirrored, UIImageOrientation.RightMirrored:
-            CGAffineTransformTranslate(transform, self.size.height, 0)
-            CGAffineTransformScale(transform, -1, 1)
-        case UIImageOrientation.Up, UIImageOrientation.Down, UIImageOrientation.Left, UIImageOrientation.Right:
+        case UIImageOrientation.leftMirrored, UIImageOrientation.rightMirrored:
+            transform.translatedBy(x: self.size.height, y: 0)
+            transform.scaledBy(x: -1, y: 1)
+        case UIImageOrientation.up, UIImageOrientation.down, UIImageOrientation.left, UIImageOrientation.right:
             break
         }
 
-        let ctx:CGContextRef = CGBitmapContextCreate(nil, Int(self.size.width), Int(self.size.height), CGImageGetBitsPerComponent(self.CGImage), 0, CGImageGetColorSpace(self.CGImage), CGImageAlphaInfo.PremultipliedLast.rawValue)!
+        let ctx:CGContext = CGContext(data: nil, width: Int(self.size.width), height: Int(self.size.height), bitsPerComponent: self.cgImage!.bitsPerComponent, bytesPerRow: 0, space: self.cgImage!.colorSpace!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
 
-        CGContextConcatCTM(ctx, transform)
+        ctx.concatenate(transform)
 
         switch self.imageOrientation {
-        case UIImageOrientation.Left, UIImageOrientation.LeftMirrored, UIImageOrientation.Right, UIImageOrientation.RightMirrored:
-            CGContextDrawImage(ctx, CGRectMake(0, 0, self.size.height, self.size.width), self.CGImage)
+        case UIImageOrientation.left, UIImageOrientation.leftMirrored, UIImageOrientation.right, UIImageOrientation.rightMirrored:
+            ctx.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.height, height: self.size.width))
             break
         default:
-            CGContextDrawImage(ctx, CGRectMake(0, 0, self.size.width, self.size.height), self.CGImage)
+            ctx.draw(self.cgImage!, in: CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height))
             break
         }
         
-        guard let cgimg = CGBitmapContextCreateImage(ctx) else {
+        guard let cgimg = ctx.makeImage() else {
             return nil
         }
         
-        return UIImage(CGImage: cgimg)
+        return UIImage(cgImage: cgimg)
     }
 }

@@ -10,11 +10,11 @@ import AssetsLibrary
 import UIKit
 
 public extension ALAssetsLibrary {
-    func saveImage(image: UIImage!, toAlbum: String? = nil, withCallback callback: ((error: NSError?) -> Void)?) {
-        self.writeImageToSavedPhotosAlbum(image.CGImage, orientation: ALAssetOrientation(rawValue: image.imageOrientation.rawValue)!) { (u, e) -> Void in
+    func saveImage(_ image: UIImage!, toAlbum: String? = nil, withCallback callback: ((_ error: NSError?) -> Void)?) {
+        self.writeImage(toSavedPhotosAlbum: image.cgImage, orientation: ALAssetOrientation(rawValue: image.imageOrientation.rawValue)!) { (u, e) -> Void in
             if e != nil {
                 if callback != nil {
-                    callback!(error: e)
+                    callback!(e as NSError?)
                 }
                 return
             }
@@ -25,11 +25,11 @@ public extension ALAssetsLibrary {
         }
     }
 
-    func saveVideo(assetUrl: NSURL!, toAlbum: String? = nil, withCallback callback: ((error: NSError?) -> Void)?) {
-        self.writeVideoAtPathToSavedPhotosAlbum(assetUrl, completionBlock: { (u, e) -> Void in
+    func saveVideo(_ assetUrl: URL!, toAlbum: String? = nil, withCallback callback: ((_ error: NSError?) -> Void)?) {
+        self.writeVideoAtPath(toSavedPhotosAlbum: assetUrl, completionBlock: { (u, e) -> Void in
             if e != nil {
                 if callback != nil {
-                    callback!(error: e)
+                    callback!(e as NSError?)
                 }
                 return;
             }
@@ -41,7 +41,7 @@ public extension ALAssetsLibrary {
     }
 
 
-    func addAssetURL(assetURL: NSURL!, toAlbum: String!, withCallback callback: ((error: NSError?) -> Void)?) {
+    func addAssetURL(_ assetURL: URL!, toAlbum: String!, withCallback callback: ((_ error: NSError?) -> Void)?) {
 
         var albumWasFound = false
 
@@ -49,18 +49,18 @@ public extension ALAssetsLibrary {
         self.enumerateGroupsWithTypes(ALAssetsGroupAlbum, usingBlock: { (group, stop) -> Void in
 
             // Compare the names of the albums
-            if group != nil && toAlbum == group.valueForProperty(ALAssetsGroupPropertyName) as! String {
+            if group != nil && toAlbum == group?.value(forProperty: ALAssetsGroupPropertyName) as! String {
                 albumWasFound = true
 
                 // Get the asset and add to the album
-                self.assetForURL(assetURL, resultBlock: { (asset) -> Void in
-                    group.addAsset(asset)
+                self.asset(for: assetURL, resultBlock: { (asset) -> Void in
+                    group?.add(asset)
 
                     if callback != nil {
-                        callback!(error: nil)
+                        callback!(nil)
                     }
 
-                }, failureBlock: callback)
+                }, failureBlock: callback as! ALAssetsLibraryAccessFailureBlock!)
 
                 // Album was found, bail out of the method
                 return
@@ -69,22 +69,22 @@ public extension ALAssetsLibrary {
                 // Photo albums are over, target album does not exist, thus create it
 
                 // Create new assets album
-                self.addAssetsGroupAlbumWithName(toAlbum, resultBlock: { (group) -> Void in
+                self.addAssetsGroupAlbum(withName: toAlbum, resultBlock: { (group) -> Void in
 
                     // Get the asset and add to the album
-                    self.assetForURL(assetURL, resultBlock: { (asset) -> Void in
-                        group.addAsset(asset)
+                    self.asset(for: assetURL, resultBlock: { (asset) -> Void in
+                        group?.add(asset)
 
                         if callback != nil {
-                            callback!(error: nil)
+                            callback!(nil)
                         }
 
-                    }, failureBlock: callback)
+                    }, failureBlock: callback as! ALAssetsLibraryAccessFailureBlock!)
 
-                }, failureBlock: callback)
+                }, failureBlock: callback as! ALAssetsLibraryAccessFailureBlock!)
 
                 return
             }
-        }, failureBlock: callback)
+        }, failureBlock: callback as! ALAssetsLibraryAccessFailureBlock!)
     }
 }
