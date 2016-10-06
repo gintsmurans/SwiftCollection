@@ -53,7 +53,31 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
     open var userInfo: NSMutableDictionary! = NSMutableDictionary()
     open var tableReuseIdentificator = "BasicSearchControllerCell"
 
-    open var data: [Dictionary<String, Any>]?
+    open var data: [Dictionary<String, Any>]? {
+        didSet {
+            guard let groupBy = self.dataGroupedByKey else {
+                return
+            }
+
+            guard let data = self.data else {
+                return
+            }
+
+            // Categorize and map
+            let categories = data.categorise { (item) -> String in
+                return (item[groupBy] as! String).uppercased()
+            }
+            let mapped = categories.map { (item) -> (name: String, items: [[String: Any]]) in
+                return (name: item.key, items: item.value)
+            }
+
+            // Finally sort
+            self.dataGrouped = mapped.sorted { $0.name < $1.name }
+        }
+    }
+    open var dataGrouped: [(name: String, items:[[String: Any]])]?
+    open var dataGroupedByKey: String?
+
     open var filteredData: [Dictionary<String, Any>]?
     open var groups: [String]? = nil {
         didSet {
@@ -127,24 +151,44 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
 
     // MARK: - Table View
     override open func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        if searchController.searchBar.text != "" || tableView.style == .plain || self.dataGrouped == nil {
+            return 1
+        }
+
+        return self.dataGrouped!.count
+    }
+
+    open override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if searchController.searchBar.text != "" || tableView.style == .plain || self.dataGrouped == nil {
+            return nil
+        }
+
+        return self.dataGrouped![section].name
     }
 
     override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchController.searchBar.text != "" {
             return filteredData!.count
         }
-        return data == nil ? 0 : data!.count
+
+        if tableView.style == .plain || self.dataGrouped == nil {
+            return data == nil ? 0 : data!.count
+        }
+
+        return self.dataGrouped![section].items.count
     }
 
     override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentificator, for: indexPath)
 
         let item: Dictionary<String, Any>
+
         if searchController.searchBar.text != "" {
             item = filteredData![(indexPath as NSIndexPath).row]
-        } else {
+        } else if tableView.style == .plain || self.dataGrouped == nil {
             item = data![(indexPath as NSIndexPath).row]
+        } else {
+            item = dataGrouped![indexPath.section].items[indexPath.row]
         }
 
         cell.textLabel!.text = self.displayText(item, cell: cell)
@@ -156,8 +200,10 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
     override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if searchController.searchBar.text != "" {
             selectedItem = filteredData![(indexPath as NSIndexPath).row]
-        } else {
+        } else if tableView.style == .plain || self.dataGrouped == nil {
             selectedItem = data![(indexPath as NSIndexPath).row]
+        } else {
+            selectedItem = dataGrouped![indexPath.section].items[indexPath.row]
         }
 
         if let callback = self.selectItemCallback {

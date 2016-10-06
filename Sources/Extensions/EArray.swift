@@ -21,7 +21,20 @@ public extension Array {
         if index != nil {
             self.remove(at: index!)
         }
-
         return index
+    }
+}
+
+
+public extension Sequence {
+    func categorise<T: Hashable>(_ key: (Iterator.Element) -> T) -> [T: [Iterator.Element]] {
+        var dict: [T: [Iterator.Element]] = [:]
+        for el in self {
+            let key = key(el)
+            if case nil = dict[key]?.append(el) {
+                dict[key] = [el]
+            }
+        }
+        return dict
     }
 }
