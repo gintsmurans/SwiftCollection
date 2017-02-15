@@ -41,7 +41,7 @@ public extension String {
         }
 
         // Calculate to
-        if length == nil {
+        if length == 0 {
             to = stringLength
         }
         else if length > 0 {
