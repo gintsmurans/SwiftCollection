@@ -72,11 +72,16 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
             }
 
             // Finally sort
-            self.dataGrouped = mapped.sorted { $0.name < $1.name }
+            if groupSortDirection == "ASC" {
+                self.dataGrouped = mapped.sorted { $0.name < $1.name }
+            } else {
+                self.dataGrouped = mapped.sorted { $0.name > $1.name }
+            }
         }
     }
     open var dataGrouped: [(name: String, items:[[String: Any]])]?
     open var dataGroupedByKey: String?
+    open var groupSortDirection: String = "ASC"
 
     open var filteredData: [Dictionary<String, Any>]?
     open var groups: [String]? = nil {
@@ -91,6 +96,8 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
     open var selectedItem: Dictionary<String, Any>?
     open var selectItemCallback: BasicSearchControllerCallback?
 
+    open var noSearchBar: Bool = false
+
 
     // MARK: - View Lifecycle
     override open func viewDidLoad() {
@@ -100,14 +107,16 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
         self.definesPresentationContext = true
 
         // Setup the Search Controller
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
-        searchController.dimsBackgroundDuringPresentation = false
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.searchBar.scopeButtonTitles = groups
+        if self.noSearchBar == false {
+            searchController.searchResultsUpdater = self
+            searchController.searchBar.delegate = self
+            searchController.dimsBackgroundDuringPresentation = false
+            searchController.hidesNavigationBarDuringPresentation = true
+            searchController.searchBar.scopeButtonTitles = groups
 
-        self.tableView.tableHeaderView = searchController.searchBar
-        searchController.searchBar.sizeToFit()
+            self.tableView.tableHeaderView = searchController.searchBar
+            searchController.searchBar.sizeToFit()
+        }
 
         // Refresh control
         self.refreshControl = UIRefreshControl()
@@ -142,6 +151,17 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
         return item["name"] as? String
     }
 
+    open func displayGroupText(_ text: String) -> String? {
+        return text
+    }
+
+    open func customCell(_ item: Dictionary<String, Any>, cell: UITableViewCell?) {
+        if let cell = cell {
+            cell.textLabel!.text = self.displayText(item, cell: cell)
+            cell.detailTextLabel?.text = self.displayDetailsText(item, cell: cell)
+        }
+    }
+
     open func filterData(_ searchText: String, scope: String?) -> (Dictionary<String, Any>) -> (Bool) {
         return {(item : Dictionary<String, Any>) -> Bool in
             return (item["name"] as! String).lowercased().contains(searchText.lowercased())
@@ -163,7 +183,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
             return nil
         }
 
-        return self.dataGrouped![section].name
+        return self.displayGroupText(self.dataGrouped![section].name)
     }
 
     override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -191,8 +211,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
             item = dataGrouped![indexPath.section].items[indexPath.row]
         }
 
-        cell.textLabel!.text = self.displayText(item, cell: cell)
-        cell.detailTextLabel?.text = self.displayDetailsText(item, cell: cell)
+        self.customCell(item, cell: cell)
 
         return cell
     }
