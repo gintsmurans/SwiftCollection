@@ -24,7 +24,7 @@ Collection of various Swift sources: Controllers, Classes, Extensions, and more,
   s.platform     = :ios, "8.0"
   s.requires_arc = true
 
-  s.source       = { :git => "https://github.com/gintsmurans/SwiftCollection.git", :branch => "master" }
+  s.source       = { :git => "https://github.com/gintsmurans/SwiftCollection.git", :tag => s.version }
   s.source_files  = "Sources/**/*.swift"
   s.exclude_files = "README.md", "LICENSE"
 
