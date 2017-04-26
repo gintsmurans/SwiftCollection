@@ -30,6 +30,26 @@ open class CUIButton: UIButton {
     }
 
 
+    func handleButtonStatusChange() {
+        if self.isEnabled == false {
+            self.backgroundColor = self.disabledBackgroundColor
+            return
+        }
+
+        if self.isHighlighted {
+            self.backgroundColor = self.highlightedBackgroundColor
+            return
+        }
+
+        if self.isSelected {
+            self.backgroundColor = self.selectedBackgroundColor
+            return
+        }
+
+        self.backgroundColor = self.originalBackgroundColor
+    }
+
+
     // MARK: - Highlighted
 
     @IBInspectable open var highlightedBackgroundColor: UIColor = UIColor.clear {
@@ -42,11 +62,7 @@ open class CUIButton: UIButton {
 
     open override var isHighlighted: Bool {
         didSet {
-            if self.isHighlighted {
-                self.backgroundColor = self.highlightedBackgroundColor
-            } else {
-                self.backgroundColor = self.originalBackgroundColor
-            }
+            self.handleButtonStatusChange()
         }
     }
 
@@ -63,14 +79,7 @@ open class CUIButton: UIButton {
 
     open override var isSelected: Bool {
         didSet {
-            if self.isSelected {
-                if self.originalBackgroundColor == nil {
-                    self.originalBackgroundColor = self.backgroundColor
-                }
-                self.backgroundColor = self.selectedBackgroundColor
-            } else {
-                self.backgroundColor = self.originalBackgroundColor
-            }
+            self.handleButtonStatusChange()
         }
     }
 
@@ -87,14 +96,7 @@ open class CUIButton: UIButton {
 
     open override var isEnabled: Bool {
         didSet {
-            if self.isEnabled == false {
-                if self.originalBackgroundColor == nil {
-                    self.originalBackgroundColor = self.backgroundColor
-                }
-                self.backgroundColor = self.selectedBackgroundColor
-            } else {
-                self.backgroundColor = self.originalBackgroundColor
-            }
+            self.handleButtonStatusChange()
         }
     }
 }
