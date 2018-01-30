@@ -11,7 +11,7 @@ import Foundation
 public extension String {
     var length: Int {
         get {
-            return self.characters.count
+            return self.count
         }
     }
 
@@ -58,7 +58,7 @@ public extension String {
 
         // Get the new string
         let range = self.index(self.startIndex, offsetBy: from)..<self.index(self.startIndex, offsetBy: to)
-        let new_string = self.substring(with: range)
+        let new_string = String(self[range])
 
         return new_string
     }
@@ -90,11 +90,11 @@ public extension String {
     }
 
     func range(_ start: Int, length: Int) -> Range<String.Index> {
-        return self.characters.index(self.startIndex, offsetBy: start) ..< self.characters.index(self.startIndex, offsetBy: start + length)
+        return self.index(self.startIndex, offsetBy: start) ..< self.index(self.startIndex, offsetBy: start + length)
     }
 
     func range(_ start: Int, end: Int) -> Range<String.Index> {
-        return self.characters.index(self.startIndex, offsetBy: start) ..< self.characters.index(self.startIndex, offsetBy: end)
+        return self.index(self.startIndex, offsetBy: start) ..< self.index(self.startIndex, offsetBy: end)
     }
 
     func range(_ nsRange : NSRange) -> Range<String.Index>? {
@@ -113,9 +113,10 @@ public extension String {
 
     func NSRangeFromRange(_ range : Range<String.Index>) -> NSRange {
         let utf16view = self.utf16
-        let from = String.UTF16View.Index(range.lowerBound, within: utf16view)
-        let to = String.UTF16View.Index(range.upperBound, within: utf16view)
-        
-        return NSMakeRange(utf16view.startIndex.distance(to: from), from.distance(to: to))
+        guard let from = String.UTF16View.Index(range.lowerBound, within: utf16view), let to = String.UTF16View.Index(range.upperBound, within: utf16view) else {
+            return NSMakeRange(0, 0)
+        }
+
+        return NSMakeRange(utf16view.distance(from: utf16view.startIndex, to: from), utf16view.distance(from: from, to: to))
     }
 }

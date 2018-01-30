@@ -53,6 +53,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
     open var userInfo: NSMutableDictionary! = NSMutableDictionary()
     open var tableReuseIdentificator = "BasicSearchControllerCell"
 
+    open var readyToLoadData = true
     open var data: [Dictionary<String, Any>]? {
         didSet {
             guard let groupBy = self.dataGroupedByKey else {
@@ -123,7 +124,9 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
         self.refreshControl?.addTarget(self, action: #selector(self.refreshData(_:)), for: UIControlEvents.valueChanged)
 
         // Load data
-        try! self.loadData()
+        if readyToLoadData {
+            try! self.loadData()
+        }
     }
 
     deinit {
@@ -135,12 +138,17 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
 
 
     // MARK: - Helpers
+
+    /// Load data
     open func loadData(_ ignoreCache: Bool = false) throws {
         throw BasicSearchControllerError.loadDataNotImplemented
     }
 
-    @IBAction open func refreshData(_ sender: AnyObject?) {
-        try! self.loadData(true)
+    /// Load data ignoring cache
+    @IBAction open func refreshData(_ sender: AnyObject? = nil) {
+        if readyToLoadData {
+            try! self.loadData(true)
+        }
     }
 
     open func displayText(_ item: Dictionary<String, Any>, cell: UITableViewCell? = nil) -> String? {
@@ -151,7 +159,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
         return item["name"] as? String
     }
 
-    open func displayGroupText(_ text: String) -> String? {
+    open func displayGroupText(_ text: String, items: [[String: Any]]) -> String? {
         return text
     }
 
@@ -183,7 +191,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
             return nil
         }
 
-        return self.displayGroupText(self.dataGrouped![section].name)
+        return self.displayGroupText(self.dataGrouped![section].name, items: self.dataGrouped![section].items)
     }
 
     override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
