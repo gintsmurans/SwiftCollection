@@ -46,7 +46,7 @@ public typealias BasicSearchControllerCallback = (_ selectedItem: Dictionary<Str
          )
      }
  */
-open class BasicSearchController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate {
+open class BasicSearchController: UITableViewController, UISearchResultsUpdating, UISearchBarDelegate, UISearchControllerDelegate {
 
     let searchController = UISearchController(searchResultsController: nil)
 
@@ -109,8 +109,9 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
 
         // Setup the Search Controller
         if self.noSearchBar == false {
-            searchController.searchResultsUpdater = self
+            searchController.delegate = self
             searchController.searchBar.delegate = self
+            searchController.searchResultsUpdater = self
             searchController.dimsBackgroundDuringPresentation = false
             searchController.hidesNavigationBarDuringPresentation = true
             searchController.searchBar.scopeButtonTitles = groups
@@ -179,7 +180,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
 
     // MARK: - Table View
     override open func numberOfSections(in tableView: UITableView) -> Int {
-        if searchController.searchBar.text != "" || tableView.style == .plain || self.dataGrouped == nil {
+        if searchController.searchBar.text != "" || searchController.searchBar.selectedScopeButtonIndex > 0 || tableView.style == .plain || self.dataGrouped == nil {
             return 1
         }
 
@@ -187,7 +188,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
     }
 
     open override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if searchController.searchBar.text != "" || tableView.style == .plain || self.dataGrouped == nil {
+        if searchController.searchBar.text != "" || searchController.searchBar.selectedScopeButtonIndex > 0 || tableView.style == .plain || self.dataGrouped == nil {
             return nil
         }
 
@@ -195,7 +196,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
     }
 
     override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchController.searchBar.text != "" {
+        if searchController.searchBar.text != "" || searchController.searchBar.selectedScopeButtonIndex > 0 {
             return filteredData!.count
         }
 
@@ -211,7 +212,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
 
         let item: Dictionary<String, Any>
 
-        if searchController.searchBar.text != "" {
+        if searchController.searchBar.text != "" || searchController.searchBar.selectedScopeButtonIndex > 0 {
             item = filteredData![(indexPath as NSIndexPath).row]
         } else if tableView.style == .plain || self.dataGrouped == nil {
             item = data![(indexPath as NSIndexPath).row]
@@ -225,7 +226,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
     }
 
     override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if searchController.searchBar.text != "" {
+        if searchController.searchBar.text != "" || searchController.searchBar.selectedScopeButtonIndex > 0 {
             selectedItem = filteredData![(indexPath as NSIndexPath).row]
         } else if tableView.style == .plain || self.dataGrouped == nil {
             selectedItem = data![(indexPath as NSIndexPath).row]
@@ -244,6 +245,26 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
         tableView.reloadData()
     }
 
+
+    // MARK: - UISearchController Delegate
+    func resizeTableViewHeaderHeight() {
+        guard let headerView = self.tableView.tableHeaderView else {
+            return
+        }
+
+        let height = searchController.searchBar.systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+        var frame = headerView.frame
+        frame.size.height = height
+        headerView.frame = frame
+    }
+
+    public func didPresentSearchController(_ searchController: UISearchController) {
+        resizeTableViewHeaderHeight()
+    }
+
+    public func didDismissSearchController(_ searchController: UISearchController) {
+        resizeTableViewHeaderHeight()
+    }
 
     // MARK: - UISearchBar Delegate
     open func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {

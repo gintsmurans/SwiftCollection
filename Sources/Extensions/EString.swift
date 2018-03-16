@@ -76,6 +76,18 @@ public extension String {
 
         return emailTest.evaluate(with: self)
     }
+
+    func jsonObject() -> Any? {
+        guard let data = self.data(using: .utf8) else {
+            return nil
+        }
+
+        do {
+            return try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
+        } catch {
+            return nil
+        }
+    }
 }
 
 
