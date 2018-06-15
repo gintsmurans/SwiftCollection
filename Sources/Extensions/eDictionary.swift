@@ -67,3 +67,22 @@ public extension Dictionary {
         }
     }
 }
+
+
+extension Dictionary where Key == String, Value == Any? {
+    public func replaceNull(with newItem: Any, doRecursive recursive: Bool = true) -> [String: Any?] {
+        var dict = self.mapValues { $0 is NSNull || $0 == nil ? newItem : $0 }
+
+        if recursive == true {
+            for (key, item) in dict {
+                if let tmpItem = item as? [String: Any?] {
+                    dict[key] = tmpItem.replaceNull(with: newItem)
+                } else if let tmpItem = item as? [[String: Any?]] {
+                    dict[key] = tmpItem.replaceNull(with: newItem)
+                }
+            }
+        }
+
+        return dict
+    }
+}

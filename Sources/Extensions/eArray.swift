@@ -23,6 +23,22 @@ public extension Array {
         }
         return index
     }
+
+    public func replaceNull(with newItem: Any, doRecursive recursive: Bool = true) -> Array<Any> {
+        var dict = self.filter {
+            return !($0 is NSNull)
+        }
+
+        if recursive == true {
+            for (key, item) in dict.enumerated() {
+                if let tmpItem = item as? [String: Any?] {
+                    dict[key] = tmpItem.replaceNull(with: "") as! Element
+                }
+            }
+        }
+
+        return dict
+    }
 }
 
 
