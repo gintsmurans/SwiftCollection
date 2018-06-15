@@ -8,7 +8,7 @@
 import Foundation
 
 public extension Bundle {
-    func pathForResource(_ filename: String) -> String? {
+    func path(forFilename filename: String) -> String? {
         if self.resourcePath == nil {
             return nil
         }
