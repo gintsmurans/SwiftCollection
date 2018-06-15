@@ -8,13 +8,14 @@
 import Foundation
 
 
-struct CacheObject {
-    var name: String
-    var timeout: Int = 86400
-    var items: Any?
+public struct CacheObject {
+    public var name: String
+    public var items: Any?
+    public var timeout: Int = 86400
+
     internal var timestamp: Date = Date()
 
-    init(name cacheName: String, timeout cacheTimeout: Int? = nil) {
+    public init(name cacheName: String, timeout cacheTimeout: Int? = nil) {
         self.name = "Cache_" + cacheName
         if cacheTimeout != nil {
             self.timeout = cacheTimeout!
@@ -23,7 +24,7 @@ struct CacheObject {
         self.reload()
     }
 
-    mutating func reload() {
+    public mutating func reload() {
         guard let data = UserDefaults.standard.object(forKey: self.name) as? [String: Any] else {
             return
         }
@@ -32,7 +33,7 @@ struct CacheObject {
         self.timestamp = (data["timestamp"] as! NSDate) as Date
     }
 
-    mutating func update(_ items: Any?) {
+    public mutating func update(_ items: Any?) {
         guard var items = items else {
             self.items = nil
 
@@ -59,13 +60,13 @@ struct CacheObject {
         UserDefaults.standard.synchronize()
     }
 
-    mutating func invalidate(_ force: Bool = false) {
+    public mutating func invalidate(_ force: Bool = false) {
         if force || self.shouldReload() {
             self.update(nil)
         }
     }
 
-    func shouldReload() -> Bool {
+    public func shouldReload() -> Bool {
         if self.items == nil {
             return true
         }
