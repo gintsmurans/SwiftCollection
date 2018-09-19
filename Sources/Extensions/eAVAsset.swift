@@ -18,13 +18,13 @@ public extension AVAsset {
 
     /// Returns instance of UIImage containing first frame of current video asset
     func firstVideoFrame() -> UIImage? {
-        let time = CMTimeMake(1, 1)
+        let time = CMTimeMake(value: 1, timescale: 1)
         return self.videoFrameAt(Time: time)
     }
 
     /// Returns instance of UIImage containing frame at time specified by "seconds" parameter
     func videoFrameAt(Seconds seconds: Float64) -> UIImage? {
-        let time = CMTimeMake(Int64(24 * seconds), 24)
+        let time = CMTimeMake(value: Int64(24 * seconds), timescale: 24)
         return self.videoFrameAt(Time: time)
     }
 
