@@ -7,44 +7,47 @@ Requires: **Swift 3**
 
 ### Extensions
 
-* **EALAssetsLibrary.swift** - for managing assets library, for example to save an image to specific photo album (deprecated as of iOS 9.0)
-
-* **EArray.swift**
+* **eArray.swift**
   * removeObject() -> Remove object from array.
+  * replaceNull() -> Replaces alll null(nil) objects.
+  * categorise() -> Make dict from array based on key.
 
-* **EAVAsset.swift**
+* **eAVAsset.swift**
   * firstVideoFrameFromURL() -> Class method that returns instance of UIImage containing first frame of video asset loaded from the url specified by "url" parameter.
   * firstVideoFrame() -> Returns instance of UIImage containing first frame of current video asset.
   * videoFrameAt() -> Returns instance of UIImage containing frame at time specified by "seconds" parameter.
   * videoFrameAt() -> Returns instance of UIImage containing frame at time specified by "time" parameter.
 
-* **ENSBundle.swift**
+* **eBundle.swift**
   * pathForResource() -> Returns path for app's resources.
 
-* **ENSDictionary.swift**
-  * jsonString() -> Returns jsonString made from current NSDictionary.
-  * init(jsonString: String) -> Inits NSDictionary object from json string.
+* **eDate.swift**
+  * dateComponents -> Access date's components.
+  * format() -> Returns formatted string.
 
-* **EString.swift**
-  * length -> Shortcut to "".characters.count.
-  * containsOnly() -> Returns whether current string contains only characters in a set. passed as parameter
-  * substr() -> Substring helper.
+* **eDictionary.swift**
+  * jsonString() -> Returns jsonString made from current NSDictionary.
+  * init() -> Inits NSDictionary object from json string.
+  * replaceNull() -> Replaces all null(nil) elements.
+
+* **eString.swift**
+  * containsOnly() -> Returns whether current string contains only characters in a set. passed as parameter.
   * isValidEmail() -> Validates email address.
 
-* **EUIColor.swift**
+* **eUIColor.swift**
   * init(r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) -> Helper to init UIColor based on RGBA value.
 
-* **EUIImage.swift**
+* **eUIImage.swift**
   * init?(color: UIColor, size: CGSize) -> Init blank image with background color and size.
   * crop() -> Crop image to specific size.
   * cropToSquare() -> Crop image to squared size by searching the shortest first.
   * resize() -> Resize image based on size and ContentMode.
   * fixImageOrientation() -> Fix image orientation by rotating and setting its rotation tags as them should be.
 
-* **EUINavigationController.swift**
+* **eUINavigationController.swift**
   * popViewControllerAnimatedWithHandler() -> Pop view controller animated + call completion handler after animation is done animating.
 
-* **EUIView.swift**
+* **eUIView.swift**
   * viewWithTagRecursive() -> Search for a view with tag recursively.
 
 
@@ -53,4 +56,6 @@ Requires: **Swift 3**
 
 
 ### Classes
+* **CacheObject** - Load, save, use data, currently only supports UserDefaults.standard.
 * **CUIButton** - Custom button that allows setting background colors for multiple button modes in interface builder.
+* **PaddedUITextField** - Add padding to UITextField.
