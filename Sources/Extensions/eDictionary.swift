@@ -78,9 +78,7 @@ extension Dictionary where Key == String, Value == Any? {
                 if let tmpItem = item as? [String: Any?] {
                     dict[key] = tmpItem.replaceNull(with: newItem)
                 } else if let tmpItem = item as? [[String: Any?]] {
-                    for inItem in tmpItem {
-                        dict[key] = inItem.replaceNull(with: newItem)
-                    }
+                    dict[key] = tmpItem.replaceNull(with: newItem)
                 }
             }
         }
