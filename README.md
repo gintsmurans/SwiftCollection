@@ -3,7 +3,7 @@ SwiftCollection
 
 Collection of various Swift sources: Controllers, Classes, Extensions, and more, that I have put together my self and from samples found while googling around.
 
-Requires: **Swift 3**
+Requires: **Swift 4.2+**
 
 ### Extensions
 
