@@ -24,7 +24,7 @@ public extension Array {
         return index
     }
 
-    public func replaceNull(with newItem: Any, doRecursive recursive: Bool = true) -> Array<Any> {
+    func replaceNull(with newItem: Any, doRecursive recursive: Bool = true) -> Array<Any> {
         var dict = self.filter {
             return !($0 is NSNull)
         }
@@ -59,7 +59,7 @@ public extension Sequence {
         if JSONSerialization.isValidJSONObject(self) == false {
             return (nil, "Not valid JSON object")
         }
-        
+
         var jsonData: Data?
         do {
             let options = (pretty == true ? JSONSerialization.WritingOptions.prettyPrinted : JSONSerialization.WritingOptions())
@@ -67,7 +67,7 @@ public extension Sequence {
         } catch let error as NSError {
             return (nil, error.localizedDescription)
         }
-        
+
         if let tmp = String(data: jsonData!, encoding: String.Encoding.utf8) {
             return (tmp, nil)
         } else {

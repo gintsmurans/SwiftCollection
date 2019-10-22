@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "GMSwiftCollection"
-  s.version      = "0.2.6"
+  s.version      = "0.2.7"
   s.summary      = "Collection of various Swift sources"
   s.description  = <<-DESC
 Collection of various Swift sources: Controllers, Classes, Extensions, and more, that I have put together my self and from samples found while googling around, when such need has arisen.
@@ -21,7 +21,7 @@ Collection of various Swift sources: Controllers, Classes, Extensions, and more,
   s.author       = { "Gints Murāns" => "gm@gm.lv" }
   s.social_media_url   = "https://twitter.com/gintsmurans"
 
-  s.swift_version = "4.2"
+  s.swift_version = "5.0"
   s.platform     = :ios, "9.3"
   s.requires_arc = true
 
