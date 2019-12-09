@@ -32,7 +32,7 @@ import UIKit
 
     @IBInspectable public var cornerRadius: CGFloat = 0.0
     @IBInspectable public var borderWidth: CGFloat = 0.0
-    @IBInspectable public var borderColor: UIColor?
+    @IBInspectable public var borderColor: UIColor = UIColor.lightGray
 
 
     override func layoutSubviews() {
@@ -43,8 +43,6 @@ import UIKit
 
         layer.cornerRadius = cornerRadius
         layer.borderWidth = borderWidth
-        if let borderColor = borderColor {
-            layer.borderColor = borderColor.cgColor
-        }
+        layer.borderColor = borderColor.cgColor
     }
 }

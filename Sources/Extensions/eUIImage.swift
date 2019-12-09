@@ -148,7 +148,8 @@ public extension UIImage {
             break
         case UIImage.Orientation.up, UIImage.Orientation.upMirrored:
             break
-        default:
+        @unknown default:
+            // pass
             break
         }
 
@@ -162,7 +163,8 @@ public extension UIImage {
             transform.scaledBy(x: -1, y: 1)
         case UIImage.Orientation.up, UIImage.Orientation.down, UIImage.Orientation.left, UIImage.Orientation.right:
             break
-        default:
+        @unknown default:
+            // pass
             break
         }
 

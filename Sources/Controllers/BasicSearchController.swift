@@ -114,9 +114,9 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
         if self.noSearchBar == false {
             searchController.delegate = self
             searchController.searchResultsUpdater = self
-            searchController.searchBar.delegate = self
             searchController.dimsBackgroundDuringPresentation = false
-            searchController.hidesNavigationBarDuringPresentation = true
+            searchController.hidesNavigationBarDuringPresentation = false
+            searchController.searchBar.delegate = self
             searchController.searchBar.scopeButtonTitles = groups
 
             if let wrapperView = self.searchWrapperView {
