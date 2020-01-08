@@ -29,7 +29,7 @@ public enum BasicSearchControllerError : Error {
     }
 }
 
-public typealias BasicSearchControllerCallback = (_ selectedItem: Dictionary<String, Any>?)->()
+public typealias BasicSearchControllerCallback = (_ selectedItem: [String: Any?]?)->()
 
 
 /**
@@ -53,7 +53,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
     open var userInfo: NSMutableDictionary = NSMutableDictionary()
     open var tableReuseIdentificator = "BasicSearchControllerCell"
 
-    open var data: [Dictionary<String, Any>]? {
+    open var data: [[String: Any?]]? {
         didSet {
             guard let groupBy = self.dataGroupedByKey else {
                 return
@@ -67,7 +67,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
             let categories = data.categorise { (item) -> String in
                 return (item[groupBy] as! String).uppercased()
             }
-            let mapped = categories.map { (item) -> (name: String, items: [[String: Any]]) in
+            let mapped = categories.map { (item) -> (name: String, items: [[String: Any?]]) in
                 return (name: item.key, items: item.value)
             }
 
@@ -79,11 +79,11 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
             }
         }
     }
-    open var dataGrouped: [(name: String, items:[[String: Any]])]?
+    open var dataGrouped: [(name: String, items:[[String: Any?]])]?
     open var dataGroupedByKey: String?
     open var groupSortDirection: String = "ASC"
 
-    open var filteredData: [Dictionary<String, Any>]?
+    open var filteredData: [[String: Any?]]?
     open var groups: [String]? = nil {
         didSet {
             if (groups != nil) {
@@ -93,7 +93,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
             }
         }
     }
-    open var selectedItem: Dictionary<String, Any>?
+    open var selectedItem: [String: Any?]?
     open var selectItemCallback: BasicSearchControllerCallback?
 
     open var readyToLoadData = true
@@ -114,9 +114,9 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
         if self.noSearchBar == false {
             searchController.delegate = self
             searchController.searchResultsUpdater = self
-            searchController.dimsBackgroundDuringPresentation = false
-            searchController.hidesNavigationBarDuringPresentation = false
             searchController.searchBar.delegate = self
+            searchController.dimsBackgroundDuringPresentation = false
+            searchController.hidesNavigationBarDuringPresentation = true
             searchController.searchBar.scopeButtonTitles = groups
 
             if let wrapperView = self.searchWrapperView {
@@ -152,7 +152,6 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
 
 
     // MARK: - Helpers
-    
     /// Load data
     open func loadData(_ ignoreCache: Bool = false) throws {
         throw BasicSearchControllerError.loadDataNotImplemented
@@ -176,30 +175,30 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
 
         refreshControl.beginRefreshing()
     }
-    
+
     open func endRefreshing() {
         guard let refreshControl = self.refreshControl else {
             return
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
             refreshControl.endRefreshing()
         }
     }
-    
-    open func displayText(_ item: Dictionary<String, Any>, cell: UITableViewCell? = nil) -> String? {
+
+    open func displayText(_ item: [String: Any?], cell: UITableViewCell? = nil) -> String? {
         return item["name"] as? String
     }
 
-    open func displayDetailsText(_ item: Dictionary<String, Any>, cell: UITableViewCell? = nil) -> String? {
+    open func displayDetailsText(_ item: [String: Any?], cell: UITableViewCell? = nil) -> String? {
         return item["name"] as? String
     }
 
-    open func displayGroupText(_ text: String, items: [[String: Any]]) -> String? {
+    open func displayGroupText(_ text: String, items: [[String: Any?]]) -> String? {
         return text
     }
 
-    open func customCell(_ item: Dictionary<String, Any>, cell: UITableViewCell?) {
+    open func customCell(_ item: [String: Any?], cell: UITableViewCell?) {
         if let cell = cell {
             cell.textLabel?.text = self.displayText(item, cell: cell)
             cell.detailTextLabel?.text = self.displayDetailsText(item, cell: cell)
@@ -245,7 +244,7 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
     override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: tableReuseIdentificator, for: indexPath)
 
-        let item: Dictionary<String, Any>
+        let item: [String: Any?]
 
         if filteredData != nil && (searchController.searchBar.text != "" || searchController.searchBar.selectedScopeButtonIndex > 0) {
             item = filteredData![(indexPath as NSIndexPath).row]
@@ -301,21 +300,21 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
         if let scopes = searchBar.scopeButtonTitles {
             scope = scopes[searchBar.selectedScopeButtonIndex]
         }
-        
+
         guard let text = searchController.searchBar.text else {
             return
         }
 
         filterContentForSearchText(text, scope: scope)
     }
-    
+
 
     // MARK: - UISearchController Delegate
     func resizeTableViewHeaderHeight() {
         guard let headerView = self.tableView.tableHeaderView else {
             return
         }
-        
+
         let height = searchController.searchBar.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         if let wrapperView = self.searchWrapperView {
             wrapperView.frame.size.height = height
@@ -323,11 +322,11 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
             headerView.frame.size.height = height
         }
     }
-    
+
     public func didPresentSearchController(_ searchController: UISearchController) {
         resizeTableViewHeaderHeight()
     }
-    
+
     public func didDismissSearchController(_ searchController: UISearchController) {
         resizeTableViewHeaderHeight()
     }
