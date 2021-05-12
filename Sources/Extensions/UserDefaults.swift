@@ -17,7 +17,7 @@ enum ObjectSavableError: String, LocalizedError {
     }
 }
 
-extension UserDefaults {
+public extension UserDefaults {
     func setObject<Object: Encodable>(_ object: Object, forKey: String) throws {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
