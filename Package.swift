@@ -25,7 +25,6 @@ let package = Package(
             name: "GMSwiftCollection",
             dependencies: [],
             path: "Sources",
-            exclude: ["Examples"],
             sources: ["Classes", "Controllers", "Extensions"],
             cSettings: [
                 .headerSearchPath("Classes"),
