@@ -5,6 +5,7 @@
 //  Copyright © 2016 Gints Murans. All rights reserved.
 //
 
+#if !os(macOS)
 import UIKit
 
 
@@ -331,3 +332,5 @@ open class BasicSearchController: UITableViewController, UISearchResultsUpdating
         resizeTableViewHeaderHeight()
     }
 }
+
+#endif

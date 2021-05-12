@@ -5,6 +5,7 @@
 //  Copyright © 2016 Gints Murans. All rights reserved.
 //
 
+#if !os(macOS)
 import UIKit
 
 public extension UIView {
@@ -23,3 +24,4 @@ public extension UIView {
         return nil
     }
 }
+#endif

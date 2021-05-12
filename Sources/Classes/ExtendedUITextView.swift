@@ -6,6 +6,7 @@
 //  Copyright © 2018 4Apps. All rights reserved.
 //
 
+#if !os(macOS)
 import UIKit
 
 @IBDesignable class ExtendedUITextView: UITextView {
@@ -46,3 +47,4 @@ import UIKit
         layer.borderColor = borderColor.cgColor
     }
 }
+#endif

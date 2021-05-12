@@ -5,6 +5,7 @@
 //  Copyright © 2016 Gints Murans. All rights reserved.
 //
 
+#if !os(macOS)
 import UIKit
 
 /**
@@ -126,3 +127,4 @@ open class CUIButton: UIButton {
 //        }
 //    }
 }
+#endif

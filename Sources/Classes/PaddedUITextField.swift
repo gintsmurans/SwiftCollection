@@ -6,6 +6,7 @@
 //  Copyright © 2018. g. 4Apps. All rights reserved.
 //
 
+#if !os(macOS)
 import UIKit
 
 class PaddedUITextField: UITextField {
@@ -28,3 +29,4 @@ class PaddedUITextField: UITextField {
         return bounds.inset(by: textPadding)
     }
 }
+#endif

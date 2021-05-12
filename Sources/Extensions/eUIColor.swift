@@ -5,6 +5,8 @@
 //  Copyright © 2014 Gints Murans. All rights reserved.
 //
 
+#if !os(macOS)
+
 import Foundation
 import UIKit
 
@@ -14,3 +16,5 @@ public extension UIColor {
         self.init(red: r/255.0, green: g/255.0, blue: b/255.0, alpha: a)
     }
 }
+
+#endif

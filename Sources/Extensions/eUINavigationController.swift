@@ -5,6 +5,8 @@
 //  Copyright © 2016 Gints Murans. All rights reserved.
 //
 
+#if !os(macOS)
+
 import UIKit
 
 public extension UINavigationController {
@@ -15,3 +17,5 @@ public extension UINavigationController {
         CATransaction.commit()
     }
 }
+
+#endif

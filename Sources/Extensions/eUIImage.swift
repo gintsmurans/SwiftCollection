@@ -5,6 +5,7 @@
 //  Copyright © 2015 Gints Murans. All rights reserved.
 //
 
+#if !os(macOS)
 import UIKit
 
 public enum UIImageContentMode {
@@ -188,3 +189,5 @@ public extension UIImage {
         return UIImage(cgImage: cgimg)
     }
 }
+
+#endif

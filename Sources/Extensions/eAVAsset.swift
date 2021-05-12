@@ -5,6 +5,7 @@
 //  Copyright © 2014 Gints Murans. All rights reserved.
 //
 
+#if !os(macOS)
 import Foundation
 import AVFoundation
 import UIKit
@@ -44,3 +45,4 @@ public extension AVAsset {
         return UIImage(cgImage: frameRef!)
     }
 }
+#endif
