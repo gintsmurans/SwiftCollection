@@ -20,11 +20,16 @@ enum ObjectSavableError: String, LocalizedError {
 public extension UserDefaults {
     func setObject<Object: Encodable>(_ object: Object, forKey: String) throws {
         let encoder = JSONEncoder()
+
+        #if os(macOS)
         if #available(macOS 10.12, *) {
             encoder.dateEncodingStrategy = .iso8601
-        } else {
-            // Fallback on earlier versions
         }
+        #else
+        if #available(iOS 10.0, *) {
+            encoder.dateEncodingStrategy = .iso8601
+        }
+        #endif
 
         do {
             let data = try encoder.encode(object)
@@ -40,11 +45,15 @@ public extension UserDefaults {
         }
 
         let decoder = JSONDecoder()
+        #if os(macOS)
         if #available(macOS 10.12, *) {
             decoder.dateDecodingStrategy = .iso8601
-        } else {
-            // Fallback on earlier versions
         }
+        #else
+        if #available(iOS 10.0, *) {
+            decoder.dateDecodingStrategy = .iso8601
+        }
+        #endif
 
         do {
             let object = try decoder.decode(type, from: data)
